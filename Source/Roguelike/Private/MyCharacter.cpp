@@ -11,11 +11,10 @@ AMyCharacter::AMyCharacter()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	SpringArmComp = CreateDefaultSubobject<USpringArmComponent>("SpringArmComp");//创建弹簧臂并命名
-	SpringArmComp->SetupAttachment(RootComponent);//将弹簧臂绑定在character上
-
-	CameraComp = CreateDefaultSubobject<UCameraComponent>("CameraComp");//创建摄像机并命名
-	CameraComp->SetupAttachment(SpringArmComp);//将摄像机绑定在弹簧臂上
+	SpringArmComp = CreateDefaultSubobject<USpringArmComponent>("SpringArmComp");
+	SpringArmComp->SetupAttachment(RootComponent); //initialise the SpringArm
+	CameraComp = CreateDefaultSubobject<UCameraComponent>("CameraComp");
+	CameraComp->SetupAttachment(SpringArmComp); //initialise the Camera
 }
 
 // Called when the game starts or when spawned
@@ -25,14 +24,9 @@ void AMyCharacter::BeginPlay()
 	
 }
 
-void AMyCharacter::MoveForward(float value)
+void AMyCharacter::MoveForward(float value) //the function allow player to move forward and back
 {
 	AddMovementInput(GetActorForwardVector(), value);
-}
-
-void AMyCharacter::MoveRight(float value)
-{
-	AddMovementInput(GetActorRightVector(), value);
 }
 
 // Called every frame
@@ -47,11 +41,8 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
-	PlayerInputComponent->BindAxis("MoveForward", this, &AMyCharacter::MoveForward);
-	PlayerInputComponent->BindAxis("MoveRight", this, &AMyCharacter::MoveRight);
-
-	PlayerInputComponent->BindAxis("Turn", this, &APawn::AddControllerYawInput);
-	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
+	PlayerInputComponent->BindAxis("MoveForward", this, &AMyCharacter::MoveForward); //create the bindaxis
+	PlayerInputComponent->BindAxis("Turn", this, &AMyCharacter::AddControllerYawInput);
+	//attention that the BindAxis in UE should be the same with the name defined here
 }
 
-	
